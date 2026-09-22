@@ -11,7 +11,7 @@ repository-code: https://github.com/sauravsingla/agentweave
 url: https://github.com/sauravsingla/agentweave
 license: Apache-2.0
 version: 0.6.0
-date-released: 2026-08-15
+date-released: 2026-08-25
 keywords:
   - pre-inference routing
   - LLM routing
@@ -29,6 +29,24 @@ keywords:
   - AutoGen
   - trustworthy AI
   - BFCL
+preferred-citation:
+  type: article
+  title: "AgentWeave: Routing Before Reasoning for Efficient Function Calling in Tool-Rich Language Models"
+  authors:
+    - family-names: Singla
+      given-names: Saurav
+    - family-names: Singla
+      given-names: Aarav
+    - family-names: Gupta
+      given-names: Advik
+    - family-names: Gupta
+      given-names: Parnika
+  year: 2026
+  repository: arXiv
+  identifiers:
+    - type: other
+      value: arXiv:2608.23078
+  url: https://arxiv.org/abs/2608.23078
 references:
   - type: article
     title: "AgentWeave: Routing Before Reasoning for Efficient Function Calling in Tool-Rich Language Models"
