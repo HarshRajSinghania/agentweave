@@ -5,14 +5,54 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agentweave"
 version = "0.6.0"
-description = "Knowledge-, capability-, trust-, policy-, and resource-aware framework for discovering, validating, selecting, and orchestrating heterogeneous AI agents across cloud, marketplaces, enterprise, and edge environments."
+description = "Pre-inference routing for tool-rich LLMs and multi-agent systems with MCP, A2A, LangGraph, AutoGen, policy-aware routing, recovery, and reproducible evaluation."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
+authors = [
+  { name = "Saurav Singla" },
+]
+keywords = [
+  "pre-inference-routing",
+  "llm-routing",
+  "tool-routing",
+  "tool-selection",
+  "function-calling",
+  "mcp",
+  "model-context-protocol",
+  "agent-routing",
+  "agent-orchestration",
+  "multi-agent-systems",
+  "a2a-protocol",
+  "agent-interoperability",
+  "agentic-ai",
+  "langgraph",
+  "autogen",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
   "httpx>=0.27",
   "networkx>=3.2",
 ]
+
+[project.urls]
+Homepage = "https://github.com/sauravsingla/agentweave"
+Repository = "https://github.com/sauravsingla/agentweave"
+Documentation = "https://github.com/sauravsingla/agentweave#readme"
+"Research Paper" = "https://arxiv.org/abs/2608.23078"
+Issues = "https://github.com/sauravsingla/agentweave/issues"
+Changelog = "https://github.com/sauravsingla/agentweave/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 security = ["PyJWT[crypto]>=2.9", "cryptography>=42"]
