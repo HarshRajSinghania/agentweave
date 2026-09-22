@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a reproducible AgentWeave defect
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve AgentWeave. Please avoid posting secrets or unpatched vulnerability details here; use the process in SECURITY.md for security issues.
+  - type: input
+    id: version
+    attributes:
+      label: AgentWeave version or commit
+      placeholder: v0.6.0 or commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest commands or code needed to reproduce the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Python version, OS, optional extras/integrations, and relevant model or protocol versions.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or traceback
+      render: shell

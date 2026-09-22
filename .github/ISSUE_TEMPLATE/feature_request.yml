@@ -1,0 +1,29 @@
+name: Feature or research request
+description: Propose a feature, integration, benchmark, or research extension
+title: "[Proposal] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or research question
+      description: What user, systems, interoperability, or research problem should this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Describe the smallest useful implementation or experiment.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation or acceptance criteria
+      description: How should the change be tested or evaluated?
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Related evidence or references
+      description: Link related issues, papers, benchmarks, protocols, or framework documentation.
