@@ -46,9 +46,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/sauravsingla/agentweave"
+Homepage = "https://sauravsingla.github.io/agentweave/"
 Repository = "https://github.com/sauravsingla/agentweave"
-Documentation = "https://github.com/sauravsingla/agentweave#readme"
+Documentation = "https://sauravsingla.github.io/agentweave/"
 "Research Paper" = "https://arxiv.org/abs/2608.23078"
 Issues = "https://github.com/sauravsingla/agentweave/issues"
 Changelog = "https://github.com/sauravsingla/agentweave/blob/main/CHANGELOG.md"

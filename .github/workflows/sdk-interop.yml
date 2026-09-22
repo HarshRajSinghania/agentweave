@@ -1,8 +1,6 @@
 name: A2A SDK Interoperability Proof
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:

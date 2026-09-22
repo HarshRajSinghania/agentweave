@@ -1,9 +1,6 @@
 name: Router V2 External Holdout
 
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 
 jobs:

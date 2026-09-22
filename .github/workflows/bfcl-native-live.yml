@@ -1,7 +1,6 @@
 name: BFCL Routing Pressure Study V6
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

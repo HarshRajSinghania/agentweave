@@ -1,8 +1,6 @@
 name: External Environment Proof
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       run_hosted_a2a:

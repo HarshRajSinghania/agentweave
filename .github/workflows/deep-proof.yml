@@ -1,8 +1,6 @@
 name: AgentWeave Deep Proof
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       run_external_marketplaces:

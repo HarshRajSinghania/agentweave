@@ -8,7 +8,7 @@ authors:
     orcid: https://orcid.org/0000-0002-6404-3988
 abstract: AgentWeave is an open-source pre-inference routing and reliability layer for tool-rich LLM and multi-agent systems, with support for MCP, A2A interoperability, policy-aware routing, recovery, and reproducible evaluation.
 repository-code: https://github.com/sauravsingla/agentweave
-url: https://github.com/sauravsingla/agentweave
+url: https://sauravsingla.github.io/agentweave/
 license: Apache-2.0
 version: 0.6.0
 date-released: 2026-08-25
