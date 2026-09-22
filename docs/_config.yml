@@ -7,3 +7,83 @@ lang: "en"
 author:
   name: "Saurav Singla"
   url: "https://github.com/sauravsingla"
+
+defaults:
+  - scope:
+      path: "MCP_INTEGRATION.md"
+    values:
+      layout: "default"
+      title: "AgentWeave MCP Tool Routing Integration"
+      description: "Use AgentWeave for pre-inference routing over large MCP tool catalogs while preserving original MCP tool schemas and invocation semantics."
+  - scope:
+      path: "A2A_COMPATIBILITY.md"
+    values:
+      layout: "default"
+      title: "AgentWeave A2A Compatibility"
+      description: "AgentWeave A2A interoperability targets, SDK compatibility, protocol evidence, and reproducible conformance boundaries."
+  - scope:
+      path: "LANGGRAPH_INTEGRATION.md"
+    values:
+      layout: "default"
+      title: "AgentWeave LangGraph Integration"
+      description: "Use AgentWeave as a pre-inference routing node in LangGraph to select a smaller set of relevant specialists before downstream execution."
+  - scope:
+      path: "AUTOGEN_INTEGRATION.md"
+    values:
+      layout: "default"
+      title: "AgentWeave AutoGen Integration"
+      description: "Use AgentWeave as a pre-team routing layer for AutoGen to select a bounded task-specific participant set before team execution."
+  - scope:
+      path: "BFCL_REPRODUCE.md"
+    values:
+      layout: "default"
+      title: "Reproduce the AgentWeave BFCL-Derived Evaluation"
+      description: "Validate and reproduce AgentWeave's frozen BFCL-derived routing-pressure study with pinned data, model, protocol, and evidence boundaries."
+  - scope:
+      path: "API_COMPATIBILITY.md"
+    values:
+      layout: "default"
+      title: "AgentWeave API Compatibility Policy"
+      description: "AgentWeave semantic-versioning, public API, deprecation, experimental-surface, and protocol-compatibility policy."
+  - scope:
+      path: "BRING_YOUR_OWN_MODEL.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Bring Your Own Model (BYOM)"
+      description: "Connect AgentWeave pre-inference routing to user-supplied local or hosted models while retaining explicit routing provenance."
+  - scope:
+      path: "PAPER_QUALITY_EVALUATION.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Paper-Quality Evaluation Evidence"
+      description: "AgentWeave paper-quality evaluation evidence, including exploratory semantic-routing baselines, failure analysis, and preserved negative results."
+  - scope:
+      path: "ISSUE_22_ROUTING_PROVENANCE.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Portable Tool-Routing Provenance"
+      description: "Portable AgentWeave provenance for source catalogs, policy filtering, routed model-visible tools, authorization, execution, and recovery."
+  - scope:
+      path: "ISSUE_27_POLICY_FIRST_SCOPE.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Policy-First Scope Filtering"
+      description: "AgentWeave policy-first architecture: deterministic caller-context filtering before optional task-aware routing and model execution."
+  - scope:
+      path: "ISSUE_28_ADVERSARIAL_BENCHMARK.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Adversarial Authorization Benchmark"
+      description: "Controlled AgentWeave adversarial authorization evaluation comparing all-tools exposure with routed exposure and fail-closed authorization."
+  - scope:
+      path: "ISSUE_29_RECOVERY_STRESS.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Recovery and State-Change Stress Evaluation"
+      description: "Controlled AgentWeave recovery evaluation for tool failure, state changes, re-routing, fixed routed sets, and all-tools exposure."
+  - scope:
+      path: "ISSUE_35_DEFERRED_TOOL_SEARCH.md"
+    values:
+      layout: "default"
+      title: "AgentWeave Deferred Tool Search and Progressive Disclosure"
+      description: "AgentWeave evaluation of all-tools, policy-only, pre-inference routing, and deferred tool search for progressive capability disclosure."
