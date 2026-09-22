@@ -15,12 +15,12 @@ AgentWeave is maintained by [Saurav Singla](https://github.com/sauravsingla) and
 
 - [AgentWeave repository](https://github.com/sauravsingla/agentweave)
 - [30-second start](https://github.com/sauravsingla/agentweave#30-second-start)
-- [MCP integration](MCP_INTEGRATION.md)
-- [A2A interoperability](A2A_COMPATIBILITY.md)
-- [LangGraph integration](LANGGRAPH_INTEGRATION.md)
-- [AutoGen integration](AUTOGEN_INTEGRATION.md)
-- [BFCL reproduction](BFCL_REPRODUCE.md)
-- [API compatibility](API_COMPATIBILITY.md)
+- [MCP integration](MCP_INTEGRATION.html)
+- [A2A interoperability](A2A_COMPATIBILITY.html)
+- [LangGraph integration](LANGGRAPH_INTEGRATION.html)
+- [AutoGen integration](AUTOGEN_INTEGRATION.html)
+- [BFCL reproduction](BFCL_REPRODUCE.html)
+- [API compatibility](API_COMPATIBILITY.html)
 - [Research paper](https://arxiv.org/abs/2608.23078)
 
 ## What problem does AgentWeave solve?

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://sauravsingla.github.io/agentweave/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://sauravsingla.github.io/agentweave/</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/MCP_INTEGRATION.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/A2A_COMPATIBILITY.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/LANGGRAPH_INTEGRATION.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/AUTOGEN_INTEGRATION.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/BFCL_REPRODUCE.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/API_COMPATIBILITY.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/BRING_YOUR_OWN_MODEL.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/PAPER_QUALITY_EVALUATION.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/ISSUE_22_ROUTING_PROVENANCE.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/ISSUE_27_POLICY_FIRST_SCOPE.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/ISSUE_28_ADVERSARIAL_BENCHMARK.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/ISSUE_29_RECOVERY_STRESS.html</loc></url>
+  <url><loc>https://sauravsingla.github.io/agentweave/ISSUE_35_DEFERRED_TOOL_SEARCH.html</loc></url>
 </urlset>

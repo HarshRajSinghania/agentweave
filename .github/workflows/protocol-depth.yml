@@ -3,7 +3,22 @@ name: Protocol Depth Proof
 on:
   push:
     branches: [main]
+    paths:
+      - 'agentweave/**'
+      - 'scripts/protocol_depth_proof.py'
+      - 'tests/test_external_wire_profiles.py'
+      - 'tests/test_interop_card.py'
+      - 'pyproject.toml'
+      - '.github/workflows/protocol-depth.yml'
   pull_request:
+    paths:
+      - 'agentweave/**'
+      - 'scripts/protocol_depth_proof.py'
+      - 'tests/test_external_wire_profiles.py'
+      - 'tests/test_interop_card.py'
+      - 'pyproject.toml'
+      - '.github/workflows/protocol-depth.yml'
+  workflow_dispatch:
 
 jobs:
   grpc-push-contract:
