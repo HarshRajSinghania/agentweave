@@ -1,6 +1,8 @@
 ---
+layout: default
 title: AgentWeave — Pre-Inference Routing for Tool-Rich LLMs
 description: Open-source pre-inference routing for tool-rich LLM and multi-agent systems with MCP, A2A, LangGraph, AutoGen, policy-aware routing, recovery, and reproducible evaluation.
+permalink: /
 ---
 
 # AgentWeave — Pre-Inference Routing for Tool-Rich LLMs

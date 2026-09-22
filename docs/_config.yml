@@ -1,0 +1,9 @@
+title: "AgentWeave — Pre-Inference Routing for Tool-Rich LLMs"
+description: "Open-source pre-inference routing for tool-rich LLM and multi-agent systems with MCP, A2A, LangGraph, AutoGen, policy-aware routing, recovery, and reproducible evaluation."
+url: "https://sauravsingla.github.io"
+baseurl: "/agentweave"
+repository: "sauravsingla/agentweave"
+lang: "en"
+author:
+  name: "Saurav Singla"
+  url: "https://github.com/sauravsingla"

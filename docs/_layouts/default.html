@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | default: site.title | escape }}</title>
+  <meta name="description" content="{{ page.description | default: site.description | escape }}">
+  <meta name="author" content="Saurav Singla">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://sauravsingla.github.io/agentweave/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AgentWeave">
+  <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+  <meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+  <meta property="og:url" content="https://sauravsingla.github.io/agentweave/">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+  <meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://sauravsingla.github.io/agentweave/#website",
+        "url": "https://sauravsingla.github.io/agentweave/",
+        "name": "AgentWeave",
+        "description": "Pre-inference routing for tool-rich LLM and multi-agent systems.",
+        "publisher": {"@id": "https://sauravsingla.github.io/agentweave/#person"}
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://sauravsingla.github.io/agentweave/#software",
+        "name": "AgentWeave",
+        "description": "Open-source pre-inference routing and reliability layer for tool-rich LLM and multi-agent systems.",
+        "url": "https://sauravsingla.github.io/agentweave/",
+        "codeRepository": "https://github.com/sauravsingla/agentweave",
+        "programmingLanguage": ["Python", "C++"],
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "version": "0.6.0",
+        "author": {"@id": "https://sauravsingla.github.io/agentweave/#person"},
+        "sameAs": [
+          "https://github.com/sauravsingla/agentweave",
+          "https://arxiv.org/abs/2608.23078"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://sauravsingla.github.io/agentweave/#person",
+        "name": "Saurav Singla",
+        "url": "https://github.com/sauravsingla",
+        "sameAs": [
+          "https://github.com/sauravsingla",
+          "https://orcid.org/0000-0002-6404-3988"
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main>
+    {{ content }}
+  </main>
+</body>
+</html>
