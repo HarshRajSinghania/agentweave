@@ -7,18 +7,16 @@ on:
   workflow_dispatch:
     inputs:
       publish_pypi:
-        description: Publish to PyPI using trusted publishing
+        description: Publish to PyPI using trusted publishing (tag refs only)
         required: false
         default: false
         type: boolean
 
-permissions:
-  contents: write
-  id-token: write
-
 jobs:
   build-test-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -28,35 +26,72 @@ jobs:
         run: python -m pip install -U pip build twine && pip install -e '.[dev]'
       - name: Test
         run: pytest -q
+      - name: Verify release version metadata
+        run: |
+          python - <<'PY'
+          import pathlib
+          import re
+          import tomllib
+
+          pyproject = tomllib.loads(pathlib.Path('pyproject.toml').read_text())
+          package_version = pyproject['project']['version']
+
+          init_text = pathlib.Path('agentweave/__init__.py').read_text()
+          init_match = re.search(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", init_text, re.M)
+          assert init_match, 'agentweave.__version__ not found'
+          init_version = init_match.group(1)
+
+          cff_text = pathlib.Path('CITATION.cff').read_text()
+          cff_match = re.search(r'^version:\s*([^\s]+)\s*$', cff_text, re.M)
+          assert cff_match, 'CITATION.cff version not found'
+          cff_version = cff_match.group(1).strip('"\'')
+
+          assert package_version == init_version == cff_version, (
+              f'version mismatch: pyproject={package_version}, '
+              f'agentweave.__version__={init_version}, CITATION.cff={cff_version}'
+          )
+
+          ref = '${{ github.ref }}'
+          if ref.startswith('refs/tags/'):
+              tag = '${{ github.ref_name }}'
+              assert tag == 'v' + package_version, (
+                  f'tag {tag} does not match package v{package_version}'
+              )
+
+          print(f'Version metadata consistent: {package_version}')
+          PY
       - name: Build distributions
         run: python -m build
       - name: Validate distributions
         run: twine check dist/*
-      - name: Verify tag matches package version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          python - <<'PY'
-          import pathlib,re
-          text=pathlib.Path('pyproject.toml').read_text()
-          version=re.search(r'^version = "([^"]+)"',text,re.M).group(1)
-          tag='${{ github.ref_name }}'
-          assert tag == 'v'+version, f'tag {tag} does not match package v{version}'
-          PY
       - uses: actions/upload-artifact@v4
         with:
           name: python-distributions
           path: dist/
-      - name: Create or update GitHub release
+      - name: Create immutable GitHub release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG='${{ github.ref_name }}'
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" dist/* --clobber
-          else
-            gh release create "$TAG" dist/* --generate-notes --title "AgentWeave $TAG"
+            echo "::error::Release $TAG already exists; refusing to overwrite published assets."
+            exit 1
           fi
+          gh release create "$TAG" dist/* --generate-notes --title "AgentWeave $TAG"
+
+  publish-pypi:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_pypi == true && startsWith(github.ref, 'refs/tags/v') }}
+    needs: build-test-release
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
       - name: Publish to PyPI
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_pypi == true }}
         uses: pypa/gh-action-pypi-publish@release/v1
