@@ -9,9 +9,9 @@
 
 **Pre-inference routing for tool-rich LLM and multi-agent systems.**
 
-> **Your agent has 100+ tools. Don't make the model reason over all of them. Route first, then reason over a smaller relevant action space.**
+AgentWeave is an open-source **pre-inference routing and reliability layer** maintained by [Saurav Singla](https://github.com/sauravsingla) for MCP, tool-rich LLM applications, and multi-agent systems. It reduces the tools or agents visible to the model before inference while keeping **policy, provenance, recovery, and execution explicit**.
 
-AgentWeave is an open-source **routing and reliability layer** for MCP, tool-rich LLM applications, and multi-agent systems. It reduces the tools or agents visible to the model before inference while keeping **policy, provenance, recovery, and execution explicit**.
+> **Your agent has 100+ tools. Don't make the model reason over all of them. Route first, then reason over a smaller relevant action space.**
 
 **70.18% fewer tools exposed · 61.70% fewer input tokens · 50.95% lower mean local-model latency**  
 **MCP · A2A · LangGraph · AutoGen · policy-aware routing · recovery · reproducible evaluation**
