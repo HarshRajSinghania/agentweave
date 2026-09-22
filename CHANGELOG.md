@@ -4,10 +4,20 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 
 ## [Unreleased]
 
+### Added
+- Router holdout evaluation artifacts and workflows covering the V2-V7 research iterations.
+- Untouched-generalization, recovery-stress, deferred-tool-search and paper-quality evaluation assets.
+- Focused MCP, LangGraph, AutoGen, A2A compatibility and bring-your-own-model documentation and examples.
+- A documentation landing page for AgentWeave's pre-inference routing, function-calling and multi-agent use cases.
+
+### Changed
+- Project positioning and package metadata now consistently describe AgentWeave as a pre-inference routing layer for tool-rich LLM and multi-agent systems.
+- Citation metadata now includes the project author identity and research-paper linkage.
+
 ### Planned
 - Additional independently hosted A2A endpoints and physical edge-hardware evidence as environments become available.
 
-## [0.6.0] - 2026-08-15
+## [0.6.0] - 2026-08-25
 
 ### Added
 - gRPC A2A lifecycle transport over generated protocol stubs.
