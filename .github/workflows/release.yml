@@ -44,7 +44,7 @@ jobs:
           cff_text = pathlib.Path('CITATION.cff').read_text()
           cff_match = re.search(r'^version:\s*([^\s]+)\s*$', cff_text, re.M)
           assert cff_match, 'CITATION.cff version not found'
-          cff_version = cff_match.group(1).strip('"\'')
+          cff_version = cff_match.group(1).strip("\"'")
 
           assert package_version == init_version == cff_version, (
               f'version mismatch: pyproject={package_version}, '
