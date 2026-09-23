@@ -6,7 +6,7 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 
 ### Planned
 - Additional independently hosted A2A endpoints and physical edge-hardware evidence as environments become available.
-- Additional production-provider integration fixtures and external reproductions.
+- Additional external provider/model reproductions using the credentialed Issue #38 live protocol.
 
 ## [0.7.0] - 2026-09-23
 
@@ -16,10 +16,17 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 - Canonical tool identity separate from model-visible function aliases, preventing silent cross-provider name collapse.
 - JSON Schema validation before authorization/execution and argument-aware authorization context/hooks.
 - First-class MCP catalog/executor integration with reusable shared session lifecycle and policy metadata mapping.
+- Plug-and-play `AgentWeaveApplication.from_mcp()` / `.from_mcps()` factories, multi-catalog composition, collision-safe aliases, and canonical-key executor dispatch.
+- Real MCP in-process server/client end-to-end CI, including two MCP servers exposing the same native tool name.
 - First-class LangGraph and AutoGen adapters backed only by the public runtime API.
 - Centralized `SafeHttpTransport` across AgentWeave-owned HTTP integrations.
 - Typed runtime configuration, builder/factory, versioned plugin component registry, and lifecycle-owned `AgentWeaveApplication`.
 - Real upstream MCP, LangGraph, and AutoGen compatibility CI in addition to local test doubles.
+- Runtime red-team coverage for malformed JSON, invalid schemas, argument escalation, hidden high-risk tool selection, and execution-gate bypass attempts.
+- Routing scale evidence harness covering 100, 1,000, 10,000, and 100,000 tool catalogs with wall-clock latency and Python peak-memory reporting.
+- Separate real-provider Issue #38 strategy/ablation harness reporting provider token usage and wall-clock latency without modifying the frozen controlled artifact.
+- Built-wheel installation smoke matrix for base, MCP, LangGraph, and AutoGen extras.
+- 0.7 quickstart, live-provider protocol documentation, and explicit road-to-1.0 compatibility/release gates.
 - Confidence-aware adaptive routing, abstention/deferred search, and the controlled hybrid-selection evaluation.
 
 ### Changed
@@ -28,11 +35,13 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 - Deferred discovery candidates are re-scoped before routing/model exposure.
 - Tool execution recovery tracks canonical tool identity rather than display name.
 - Runtime and plugin lifecycles are idempotent and fail safely on partial startup.
+- Release tags now gate on core tests, supported upstream integrations, real MCP end-to-end proof, distribution validation, and a fresh built-wheel install before GitHub release/PyPI publication.
 
 ### Security
 - Mandatory Agent Card payload binding and explicit trusted/untrusted registration boundaries.
 - Redirect/DNS-rebinding SSRF hardening and cross-origin credential stripping for AgentWeave-owned HTTP traffic.
 - Model-hallucinated, schema-invalid, scope-denied, and authorization-denied calls fail closed before the executor.
+- Multi-MCP execution is dispatched by canonical tool identity so same-name tools cannot silently cross provider/server boundaries.
 
 ## [0.6.0] - 2026-08-25
 

@@ -1,0 +1,88 @@
+name: Issue 38 Real Provider Study
+
+on:
+  push:
+    paths:
+      - 'evaluation/issue38_live.py'
+      - 'tests/test_issue38_live_harness.py'
+      - '.github/workflows/issue38-provider-live.yml'
+  pull_request:
+    paths:
+      - 'evaluation/issue38_live.py'
+      - 'tests/test_issue38_live_harness.py'
+      - '.github/workflows/issue38-provider-live.yml'
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Provider label for evidence metadata
+        required: true
+        default: openai-compatible
+        type: string
+      base_url:
+        description: OpenAI-compatible API base URL including /v1 when required
+        required: true
+        type: string
+      model:
+        description: Provider model identifier
+        required: true
+        type: string
+      trials:
+        description: Repeated trials per scenario/strategy and ablation
+        required: true
+        default: '3'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  protocol-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - run: pip install -e '.[dev]'
+      - run: pytest -q tests/test_issue38_live_harness.py
+      - name: Freeze the planned protocol without calling a provider
+        run: python evaluation/issue38_live.py --validate-only --output issue38-live-plan.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: issue38-live-protocol
+          path: issue38-live-plan.json
+
+  provider-live:
+    if: github.event_name == 'workflow_dispatch'
+    needs: protocol-validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      AGENTWEAVE_PROVIDER_API_KEY: ${{ secrets.AGENTWEAVE_PROVIDER_API_KEY }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - run: pip install -e '.[dev]'
+      - name: Require an explicit provider credential
+        run: |
+          if [ -z "$AGENTWEAVE_PROVIDER_API_KEY" ]; then
+            echo "::error::AGENTWEAVE_PROVIDER_API_KEY is not configured; refusing to claim a live-provider result."
+            exit 2
+          fi
+      - name: Run real provider strategy and ablation study
+        run: |
+          python evaluation/issue38_live.py \
+            --provider '${{ inputs.provider }}' \
+            --base-url '${{ inputs.base_url }}' \
+            --model '${{ inputs.model }}' \
+            --trials '${{ inputs.trials }}' \
+            --api-key-env AGENTWEAVE_PROVIDER_API_KEY \
+            --output issue38-live-results.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: issue38-real-provider-evidence-${{ inputs.provider }}
+          path: issue38-live-results.json
+          if-no-files-found: warn

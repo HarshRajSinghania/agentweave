@@ -4,18 +4,24 @@ on:
   push:
     paths:
       - 'agentweave/integrations/**'
+      - 'agentweave/composition.py'
+      - 'agentweave/application.py'
       - 'agentweave/runtime.py'
       - 'agentweave/runtime_types.py'
       - 'pyproject.toml'
       - 'tests/test_upstream_integration_compat.py'
+      - 'tests/test_mcp_real_e2e.py'
       - '.github/workflows/integration-compat.yml'
   pull_request:
     paths:
       - 'agentweave/integrations/**'
+      - 'agentweave/composition.py'
+      - 'agentweave/application.py'
       - 'agentweave/runtime.py'
       - 'agentweave/runtime_types.py'
       - 'pyproject.toml'
       - 'tests/test_upstream_integration_compat.py'
+      - 'tests/test_mcp_real_e2e.py'
       - '.github/workflows/integration-compat.yml'
   workflow_dispatch:
 
@@ -50,3 +56,6 @@ jobs:
         run: python -m pip freeze | grep -Ei '^(mcp|langgraph|autogen-agentchat|autogen-core)='
       - name: Run upstream compatibility smoke
         run: pytest -q tests/test_upstream_integration_compat.py -k '${{ matrix.test }}'
+      - name: Run real MCP end-to-end runtime proof
+        if: matrix.name == 'mcp'
+        run: pytest -q tests/test_mcp_real_e2e.py

@@ -600,10 +600,19 @@ class AgentWeaveRuntime:
         if not schema:
             return None
         try:
-            validator = Draft202012Validator(schema)
-            errors = sorted(validator.iter_errors(dict(call.arguments)), key=lambda item: list(item.path))
+            Draft202012Validator.check_schema(schema)
         except SchemaError as exc:
             return f"invalid-tool-schema:{exc.message}"
+        except Exception as exc:
+            return f"invalid-tool-schema:{type(exc).__name__}: {exc}"
+        try:
+            validator = Draft202012Validator(schema)
+            errors = sorted(
+                validator.iter_errors(dict(call.arguments)),
+                key=lambda item: list(item.path),
+            )
+        except Exception as exc:
+            return f"schema-validation-error:{type(exc).__name__}: {exc}"
         if not errors:
             return None
         error = errors[0]

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from .config import RuntimeConfig, RuntimeFactory
 from .plugins import PluginManager
@@ -48,6 +48,50 @@ class AgentWeaveApplication:
         **kwargs: Any,
     ) -> "AgentWeaveApplication":
         return cls.from_config(RuntimeConfig.load(path), **kwargs)
+
+    @classmethod
+    def from_mcp(
+        cls,
+        target: Any,
+        *,
+        model: Any,
+        source: str | None = None,
+        model_name_prefix: str | None = None,
+        plugin_manager: PluginManager | None = None,
+        **runtime_kwargs: Any,
+    ) -> "AgentWeaveApplication":
+        """Create a plug-and-play application around one MCP endpoint/server."""
+
+        from .composition import mcp_runtime
+
+        return cls(
+            mcp_runtime(
+                target,
+                model=model,
+                source=source,
+                model_name_prefix=model_name_prefix,
+                **runtime_kwargs,
+            ),
+            plugin_manager=plugin_manager,
+        )
+
+    @classmethod
+    def from_mcps(
+        cls,
+        targets: Mapping[str, Any],
+        *,
+        model: Any,
+        plugin_manager: PluginManager | None = None,
+        **runtime_kwargs: Any,
+    ) -> "AgentWeaveApplication":
+        """Create one application across multiple MCP servers safely."""
+
+        from .composition import multi_mcp_runtime
+
+        return cls(
+            multi_mcp_runtime(targets, model=model, **runtime_kwargs),
+            plugin_manager=plugin_manager,
+        )
 
     async def start(self) -> None:
         if self._started:

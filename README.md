@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/sauravsingla/agentweave/actions/workflows/ci.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/ci.yml)
 [![Integration Compatibility](https://github.com/sauravsingla/agentweave/actions/workflows/integration-compat.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/integration-compat.yml)
+[![Runtime Security and Scale Proof](https://github.com/sauravsingla/agentweave/actions/workflows/runtime-proof.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/runtime-proof.yml)
+[![Package Installation Smoke](https://github.com/sauravsingla/agentweave/actions/workflows/package-smoke.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/package-smoke.yml)
 [![A2A SDK Interop](https://github.com/sauravsingla/agentweave/actions/workflows/sdk-interop.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/sdk-interop.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Cite](https://img.shields.io/badge/cite-CITATION.cff-blue.svg)](CITATION.cff)
@@ -15,7 +17,7 @@ AgentWeave reduces the tools or agents visible to a model before inference while
 **70.18% fewer tools exposed · 61.70% fewer input tokens · 50.95% lower mean local-model latency**  
 **MCP · A2A · LangGraph · AutoGen · policy-aware routing · recovery · reproducible evaluation**
 
-**Quick links:** [30-second start](#30-second-start) · [Canonical runtime](#canonical-runtime) · [Results](#results-at-a-glance) · [MCP](docs/MCP_INTEGRATION.md) · [LangGraph](docs/LANGGRAPH_INTEGRATION.md) · [AutoGen](docs/AUTOGEN_INTEGRATION.md) · [Paper](https://arxiv.org/abs/2608.23078)
+**Quick links:** [30-second start](#30-second-start) · [Canonical runtime](#canonical-runtime) · [Results](#results-at-a-glance) · [0.7 quickstart](docs/QUICKSTART_0_7.md) · [MCP](docs/MCP_INTEGRATION.md) · [Live Issue #38 protocol](docs/ISSUE38_LIVE_PROVIDER.md) · [Road to 1.0](docs/ROAD_TO_1_0.md) · [Paper](https://arxiv.org/abs/2608.23078)
 
 ```text
 catalog
@@ -41,42 +43,48 @@ AgentWeave does **not** replace MCP, LangGraph, AutoGen, A2A, or your model. It 
 
 ## 30-second start
 
-Install the distribution `agentweave-router`; the Python package remains `agentweave`.
+Install the MCP extra; the distribution is `agentweave-router` while the Python package remains `agentweave`.
 
 ```bash
-pip install agentweave-router
+pip install 'agentweave-router[mcp]'
 ```
-
-Minimal provider-neutral routing preview:
 
 ```python
-import asyncio
-from agentweave import (
-    AgentWeaveRuntime,
-    CallableExecutor,
-    StaticToolCatalog,
-    ToolSpec,
+from agentweave import AgentWeaveApplication
+from agentweave_byom import OpenAICompatibleModelAdapter
+
+model = OpenAICompatibleModelAdapter(
+    model="my-model",
+    base_url="https://model.example/v1",
+    api_key="...",
 )
 
-class NoopModel:
-    async def complete(self, messages, *, tools=None, **kwargs):
-        return {"choices": [{"message": {"content": "done", "tool_calls": []}}]}
+app = AgentWeaveApplication.from_mcp(
+    "https://tools.example/mcp",
+    model=model,
+    max_tools=8,
+)
 
-async def main():
-    runtime = AgentWeaveRuntime(
-        model=NoopModel(),
-        catalog=StaticToolCatalog([
-            ToolSpec(name="search_docs", description="search technical documentation"),
-            ToolSpec(name="create_invoice", description="create a customer invoice"),
-        ]),
-        executor=CallableExecutor({}),
-        max_tools=1,
-    )
-    preview = await runtime.preview_route("find the routing documentation")
-    print([tool.name for tool in preview.selected])
-
-asyncio.run(main())
+result = await app.run("Find invoice INV-7")
 ```
+
+`AgentWeaveApplication` owns the MCP/runtime/plugin lifecycle. AgentWeave handles discovery, scope policy, routing, schema validation, argument-aware authorization, execution, bounded recovery, provenance, and telemetry.
+
+Several MCP servers can be composed without silently collapsing same-name tools:
+
+```python
+app = AgentWeaveApplication.from_mcps(
+    {
+        "billing": "https://billing.example/mcp",
+        "crm": "https://crm.example/mcp",
+    },
+    model=model,
+)
+```
+
+If both servers expose native `search`, the model sees collision-safe names such as `billing__search` and `crm__search`, while execution is dispatched by canonical tool identity and the MCP servers still receive the native tool name.
+
+For a provider-neutral local preview without MCP, use `AgentWeaveRuntime`, `StaticToolCatalog`, and `CallableExecutor`; see [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md).
 
 For repository development:
 
@@ -109,30 +117,26 @@ Every run also returns per-stage telemetry for catalog discovery, scope/routing,
 pip install 'agentweave-router[mcp]'
 ```
 
+The simplest lifecycle-safe path is the application factory:
+
 ```python
-from agentweave import AgentWeaveRuntime, RunContext
-from agentweave.integrations.mcp import MCPConnection, MCPExecutor, MCPToolCatalog
+from agentweave import AgentWeaveApplication
 from agentweave_byom import OpenAICompatibleModelAdapter
 
-connection = MCPConnection("https://tools.example/mcp")
-
-runtime = AgentWeaveRuntime(
-    model=OpenAICompatibleModelAdapter(
-        model="my-model",
-        base_url="https://model.example/v1",
-    ),
-    catalog=MCPToolCatalog(connection=connection),
-    executor=MCPExecutor(connection=connection),
+model = OpenAICompatibleModelAdapter(
+    model="my-model",
+    base_url="https://model.example/v1",
 )
 
-async with runtime:
-    result = await runtime.run(
-        "Search the codebase for the routing implementation",
-        context=RunContext(permissions=frozenset({"read"})),
-    )
+app = AgentWeaveApplication.from_mcp(
+    "https://tools.example/mcp",
+    model=model,
+)
+
+result = await app.run("Search the codebase for the routing implementation")
 ```
 
-The catalog and executor can share one lifecycle-owned MCP session. HTTP MCP targets are revalidated before connection establishment; AgentWeave-owned HTTP traffic uses `SafeHttpTransport` for endpoint validation, DNS pinning/rebinding checks, guarded redirects, Host/SNI preservation, and cross-origin credential stripping.
+For advanced control, `MCPConnection`, `MCPToolCatalog`, and `MCPExecutor` remain public integration components. The catalog and executor can share one lifecycle-owned MCP session. HTTP MCP targets are revalidated before connection establishment; AgentWeave-owned HTTP traffic uses `SafeHttpTransport` for endpoint validation, DNS pinning/rebinding checks, guarded redirects, Host/SNI preservation, and cross-origin credential stripping. The MCP SDK still owns its protocol wire transport unless an application supplies a custom client factory.
 
 ### Application and plugins
 
@@ -157,7 +161,7 @@ If deterministic role, tenant, permission, or policy scope already reduces the c
 
 | Stack | AgentWeave boundary |
 |---|---|
-| **MCP** | `MCPToolCatalog` + `MCPExecutor` + shared `MCPConnection` |
+| **MCP** | `AgentWeaveApplication.from_mcp()` / `.from_mcps()` or lower-level `MCPToolCatalog` + `MCPExecutor` + shared `MCPConnection` |
 | **LangGraph** | `AgentWeaveLangGraphNode` / `langgraph_node()` backed by `runtime.preview_route()` |
 | **AutoGen** | `AgentWeaveAutoGenSelector` backed by the public runtime API |
 | **A2A** | discovery/communication substrate + AgentWeave selection/execution |
@@ -172,7 +176,7 @@ pip install 'agentweave-router[autogen]'
 pip install 'agentweave-router[all-integrations]'
 ```
 
-Real upstream MCP, LangGraph, and AutoGen packages are installed in a dedicated compatibility CI matrix so adapter drift is caught separately from local test-double coverage.
+Real upstream MCP, LangGraph, and AutoGen packages are installed in a dedicated compatibility CI matrix. MCP compatibility additionally executes an in-process real MCP server/client end-to-end path, including duplicate native tool names across servers. Built-wheel smoke tests separately verify that base and integration extras install correctly outside the source checkout.
 
 ## Results at a glance
 
@@ -197,7 +201,7 @@ The BFCL-derived v6 study uses 48 BFCL V4 `multiple` tasks, 16-tool pressure, an
 
 ## Research evidence
 
-AgentWeave keeps routing, process-verification, executable-outcome, and BFCL-derived evidence separate rather than combining unlike metrics into one score.
+AgentWeave keeps routing, process-verification, executable-outcome, BFCL-derived, controlled-proxy, and provider-backed evidence separate rather than combining unlike metrics into one score.
 
 | Evidence | Evaluation problem | Current result |
 |---|---|---|
@@ -207,6 +211,8 @@ AgentWeave keeps routing, process-verification, executable-outcome, and BFCL-der
 | **AgentProcessBench** | Label-blind process verification | **55.88% step micro accuracy**; **38.30% first-error accuracy** across **1,000 trajectories / 8,509 steps** |
 | **BFCL routing-pressure v6** | Native BFCL validity under augmented tool pressure | **6/48 = 12.5% AgentWeave vs 0/48 for all matched baselines**, exact McNemar **p = 0.03125** |
 | **Executable team benchmark** | Controlled multi-agent completion and recovery | **100% completion**, **0.937 mean quality**, **100% recovery** in the preregistered repeated-seed study |
+
+The controlled Issue #38 hybrid-selection artifact remains a deterministic proxy study. `evaluation/issue38_live.py` is a separate real-provider protocol for measuring provider-reported token usage, wall-clock latency, four routing strategies, and hybrid ablations. A validated protocol is **not** itself evidence that a credentialed provider run occurred; see [`docs/ISSUE38_LIVE_PROVIDER.md`](docs/ISSUE38_LIVE_PROVIDER.md).
 
 ### Frozen-router generalization
 
@@ -230,6 +236,8 @@ New router versions are evaluated on newly introduced untouched holdouts and the
 - BFCL-derived evidence is not described as an official BFCL leaderboard result.
 - Controlled synthetic execution is not described as production performance.
 - Routing accuracy is not presented as native task completion.
+- The Issue #38 controlled proxy artifact and real-provider artifacts are reported separately; provider/model/date/trial settings must accompany provider-backed claims.
+- Host-specific 100k-tool scale measurements are engineering evidence, not universal latency or memory guarantees.
 - Changes to model, sample, router, distractors, or protocol require a new study.
 
 The paper-quality evaluation also retains the post-hoc result that simple zero-shot embedding baselines outperform the original frozen AgentWeave router on the already-observed General-AgentBench set.
@@ -238,7 +246,7 @@ The paper-quality evaluation also retains the post-hoc result that simple zero-s
 
 AgentWeave supports failure detection, trust updates, reranking, replacement selection, bounded retry, durable checkpoint/resume workflows, and fail-closed execution authorization.
 
-The proof suite covers malicious Agent Cards, prompt injection, data exfiltration, SSRF/link-local access, tool abuse, spoofing, Sybil/collusion, reputation poisoning, Byzantine disagreement, malformed results, and timeouts. It also exercises Docker isolation, JWT Verifiable Credentials, revocation, key rotation, KMS/HSM boundaries, PostgreSQL concurrency, governance constraints, and chaos scenarios.
+The proof suite covers malicious Agent Cards, prompt injection, data exfiltration, SSRF/link-local access, tool abuse, spoofing, Sybil/collusion, reputation poisoning, Byzantine disagreement, malformed results, malformed tool-call JSON, invalid tool schemas, argument escalation, hidden high-risk tool selection, and timeouts. It also exercises Docker isolation, JWT Verifiable Credentials, revocation, key rotation, KMS/HSM boundaries, PostgreSQL concurrency, governance constraints, and chaos scenarios.
 
 A passing proof is evidence for the configured test runtime; it is not a formal security, HA, hardware-attestation, or compliance certification.
 
@@ -258,10 +266,13 @@ Legacy multi-agent orchestration remains available during the pre-1.0 migration,
 
 | Area | Documentation |
 |---|---|
+| 0.7 quickstart | [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md) |
 | MCP | [`docs/MCP_INTEGRATION.md`](docs/MCP_INTEGRATION.md) |
 | A2A interoperability | [`docs/A2A_COMPATIBILITY.md`](docs/A2A_COMPATIBILITY.md) |
 | LangGraph | [`docs/LANGGRAPH_INTEGRATION.md`](docs/LANGGRAPH_INTEGRATION.md) |
 | AutoGen | [`docs/AUTOGEN_INTEGRATION.md`](docs/AUTOGEN_INTEGRATION.md) |
+| Issue #38 real-provider protocol | [`docs/ISSUE38_LIVE_PROVIDER.md`](docs/ISSUE38_LIVE_PROVIDER.md) |
+| Road to 1.0 | [`docs/ROAD_TO_1_0.md`](docs/ROAD_TO_1_0.md) |
 | BFCL reproduction | [`docs/BFCL_REPRODUCE.md`](docs/BFCL_REPRODUCE.md) |
 | API compatibility | [`docs/API_COMPATIBILITY.md`](docs/API_COMPATIBILITY.md) |
 | Research paper | [`PAPER.md`](PAPER.md) · [arXiv:2608.23078](https://arxiv.org/abs/2608.23078) |
@@ -271,7 +282,7 @@ Legacy multi-agent orchestration remains available during the pre-1.0 migration,
 
 AgentWeave is an **active research and engineering project**. APIs and evaluation protocols may evolve; pin a release or commit when using results in reproducible experiments.
 
-The strongest current evidence is around pre-inference routing, interoperability, recovery, and reproducible evaluation. Published benchmark claims remain scoped to their documented models, datasets, protocols, and test environments.
+The strongest current evidence is around pre-inference routing, interoperability, recovery, and reproducible evaluation. Published benchmark claims remain scoped to their documented models, datasets, protocols, and test environments. The proposed pre-1.0 freeze discipline and evidence gates are in [`docs/ROAD_TO_1_0.md`](docs/ROAD_TO_1_0.md).
 
 ## Contributing
 
