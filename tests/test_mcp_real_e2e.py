@@ -4,7 +4,7 @@ import pytest
 
 pytest.importorskip("mcp")
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
 
 from agentweave import AgentWeaveApplication, RunContext
 
@@ -66,7 +66,7 @@ class SelectingModel:
 
 @pytest.mark.asyncio
 async def test_real_mcp_server_lists_routes_and_executes_through_runtime():
-    server = FastMCP("AgentWeaveE2E")
+    server = MCPServer("AgentWeaveE2E")
 
     @server.tool()
     def lookup_invoice(invoice_id: str) -> dict:
@@ -95,8 +95,8 @@ async def test_real_mcp_server_lists_routes_and_executes_through_runtime():
 
 @pytest.mark.asyncio
 async def test_two_real_mcp_servers_with_same_native_name_dispatch_by_tool_identity():
-    billing = FastMCP("Billing")
-    crm = FastMCP("CRM")
+    billing = MCPServer("Billing")
+    crm = MCPServer("CRM")
 
     @billing.tool()
     def search(query: str) -> dict:
