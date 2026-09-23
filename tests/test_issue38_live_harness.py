@@ -1,4 +1,21 @@
-from evaluation.issue38_live import SCENARIOS, STRATEGIES, _catalog, validation_plan
+from __future__ import annotations
+
+import importlib.util
+import sys
+from pathlib import Path
+
+
+_SOURCE = Path(__file__).resolve().parents[1] / "evaluation" / "issue38_live.py"
+_SPEC = importlib.util.spec_from_file_location("agentweave_issue38_live", _SOURCE)
+assert _SPEC is not None and _SPEC.loader is not None
+_MODULE = importlib.util.module_from_spec(_SPEC)
+sys.modules[_SPEC.name] = _MODULE
+_SPEC.loader.exec_module(_MODULE)
+
+SCENARIOS = _MODULE.SCENARIOS
+STRATEGIES = _MODULE.STRATEGIES
+_catalog = _MODULE._catalog
+validation_plan = _MODULE.validation_plan
 
 
 def test_live_issue38_plan_preserves_four_strategy_protocol_and_ablations():
