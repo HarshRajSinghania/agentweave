@@ -133,7 +133,9 @@ async def test_invalid_json_is_rejected_before_authorization_and_execution():
 
     assert result.status == "needs-review"
     assert executor.calls == 0
-    assert result.tool_results[0].error.startswith("invalid-tool-call:invalid-json:")
+    assert result.tool_results[0].error.startswith(
+        "invalid-tool-arguments:invalid-json:"
+    )
 
 
 @pytest.mark.asyncio
@@ -157,7 +159,9 @@ async def test_malformed_or_hostile_tool_schema_fails_closed_before_executor():
 
     assert result.status == "needs-review"
     assert executor.calls == 0
-    assert result.tool_results[0].error.startswith("invalid-tool-call:invalid-tool-schema:")
+    assert result.tool_results[0].error.startswith(
+        "invalid-tool-arguments:invalid-tool-schema:"
+    )
 
 
 @pytest.mark.asyncio
