@@ -38,8 +38,11 @@ Before 1.0, the explicitly supported root surface is the curated `agentweave.__a
 - normalized runtime contracts such as `ToolSpec`, `ToolCall`, `ToolResult`, `ModelResponse`, `RunContext`, `RuntimeResult`, and runtime telemetry;
 - runtime builder/configuration contracts;
 - catalog/executor/scope/search/authorization interfaces;
+- MCP composition helpers (`mcp_runtime`, `multi_mcp_runtime`, `CompositeToolCatalog`, `AliasedToolCatalog`, and `KeyPrefixExecutor`);
 - `SafeHttpTransport`;
 - typed plugin contracts.
+
+`AgentWeaveApplication.from_mcp()` and `.from_mcps()` are the preferred convenience factories for new MCP applications. Multiple MCP sources receive deterministic model-visible aliases while canonical tool identity remains separate from display names.
 
 The goal is to keep integrations independent from internal matcher, graph, persistence, benchmark, transport-proof, and evaluation implementation details.
 
@@ -59,6 +62,10 @@ MCP, LangGraph, AutoGen, and A2A protocol/framework compatibility are versioned 
 
 For MCP, AgentWeave can own a reusable session lifecycle through `MCPConnection`. HTTP MCP targets are endpoint-validated before connection establishment; the MCP SDK still owns its protocol wire transport unless an application supplies a custom client factory.
 
+## Evidence tooling
+
+Provider-backed Issue #38 reproduction and routing scale studies are evidence tooling rather than runtime API. Frozen scored artifacts remain immutable after scoring. Provider results must identify the endpoint/model/trials and must not be substituted for controlled proxy evidence or described as universal production performance.
+
 ## Experimental surface
 
 Implementation-detail modules, CI scripts, research/evaluation code, proof harnesses, generated benchmark artifacts, and advanced protocol helpers may evolve in minor releases. Pin a package version if depending directly on them.
@@ -66,3 +73,5 @@ Implementation-detail modules, CI scripts, research/evaluation code, proof harne
 ## Deprecation
 
 Where practical, behavior that was previously public remains available for at least one migration window and emits a deprecation notice naming the preferred surface. Unsafe behavior may be changed without preserving an insecure compatibility path.
+
+The proposed freeze and release progression toward 1.0 is documented in `docs/ROAD_TO_1_0.md`.
