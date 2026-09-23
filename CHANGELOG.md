@@ -4,6 +4,9 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 
 ## [Unreleased]
 
+### Fixed
+- Close file-backed reputation database connections after each operation, including failures, so Windows can release database files without waiting for garbage collection. In-memory stores retain their shared connection.
+
 ### Planned
 - Additional independently hosted A2A endpoints and physical edge-hardware evidence as environments become available.
 - Additional external provider/model reproductions using the credentialed Issue #38 live protocol.
