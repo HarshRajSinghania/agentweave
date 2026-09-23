@@ -36,9 +36,45 @@ pip install 'agentweave-router[mcp]'
 
 The Python import package remains `agentweave`.
 
+## Plug-and-play application
+
+For one MCP server, `AgentWeaveApplication.from_mcp()` owns the runtime and MCP lifecycle:
+
+```python
+from agentweave import AgentWeaveApplication
+from agentweave_byom import OpenAICompatibleModelAdapter
+
+model = OpenAICompatibleModelAdapter(
+    model='my-model',
+    base_url='https://model.example/v1',
+)
+
+app = AgentWeaveApplication.from_mcp(
+    'https://tools.example/mcp',
+    model=model,
+    max_tools=8,
+)
+
+result = await app.run('Search the codebase for the routing implementation')
+```
+
+For several MCP servers, use logical source names:
+
+```python
+app = AgentWeaveApplication.from_mcps(
+    {
+        'billing': 'https://billing.example/mcp',
+        'crm': 'https://crm.example/mcp',
+    },
+    model=model,
+)
+```
+
+If both servers expose a native tool named `search`, the model sees deterministic aliases such as `billing__search` and `crm__search`. The MCP server still receives the native `search` name, while execution is dispatched by canonical tool identity (`mcp:billing:search` versus `mcp:crm:search`). This prevents same-name tools from silently crossing provider/server boundaries.
+
 ## Shared session lifecycle
 
-Catalog and executor can share one `MCPConnection`, which allows the canonical runtime to reuse one MCP client session instead of reconnecting for every list/call.
+For advanced composition, catalog and executor can share one `MCPConnection`, which allows the canonical runtime to reuse one MCP client session instead of reconnecting for every list/call.
 
 ```python
 from agentweave import AgentWeaveRuntime, RunContext
@@ -67,7 +103,7 @@ The runtime owns component `start()` / `stop()` lifecycle. `MCPConnection` is id
 
 ## Tool identity
 
-An MCP tool receives a stable identity containing its source and native tool name. Stable identity is separate from the function name shown to the model. If an aggregated catalog contains the same model-visible name from more than one source, AgentWeave fails loudly and requires explicit `ToolSpec.model_name` aliases rather than silently dropping one provider.
+An MCP tool receives a stable identity containing its source and native tool name. Stable identity is separate from the function name shown to the model. If an aggregated catalog contains the same model-visible name from more than one source, AgentWeave fails loudly and requires explicit `ToolSpec.model_name` aliases rather than silently dropping one provider. The multi-MCP application factory applies deterministic aliases automatically.
 
 ## Security ordering
 
@@ -114,7 +150,7 @@ Applications that require complete wire-level transport control for MCP can prov
 
 ## Compatibility CI
 
-A dedicated GitHub Actions matrix installs the real supported `mcp>=2,<3` package and verifies the upstream client surface in addition to unit tests that use deterministic fakes. This separates upstream SDK drift from core runtime regressions.
+A dedicated GitHub Actions matrix installs the real supported `mcp>=2,<3` package and verifies the upstream client surface. It also launches real in-process MCP servers and exercises catalog discovery, routing, execution, shared lifecycle, and duplicate native tool names across two servers. This is separate from deterministic unit-test doubles.
 
 ## Routing-only example
 
