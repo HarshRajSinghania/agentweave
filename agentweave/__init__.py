@@ -4,6 +4,13 @@ import importlib
 import warnings
 
 from .application import AgentWeaveApplication
+from .composition import (
+    AliasedToolCatalog,
+    CompositeToolCatalog,
+    KeyPrefixExecutor,
+    mcp_runtime,
+    multi_mcp_runtime,
+)
 from .config import (
     AgentWeaveBuilder,
     CatalogConfig,
@@ -71,6 +78,11 @@ __all__ = [
     "DefaultScopePolicy",
     "RuntimeAuthorizationPolicy",
     "normalize_model_response",
+    "CompositeToolCatalog",
+    "AliasedToolCatalog",
+    "KeyPrefixExecutor",
+    "mcp_runtime",
+    "multi_mcp_runtime",
     "RuntimeConfig",
     "ModelConfig",
     "CatalogConfig",
