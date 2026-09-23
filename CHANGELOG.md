@@ -4,6 +4,9 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 
 ## [Unreleased]
 
+### Added
+- Runnable in-process multi-MCP example demonstrating duplicate `search` names, model-visible aliases, and verified dispatch to both providers.
+
 ### Planned
 - Additional independently hosted A2A endpoints and physical edge-hardware evidence as environments become available.
 - Additional external provider/model reproductions using the credentialed Issue #38 live protocol.
