@@ -1,0 +1,58 @@
+name: Runtime Security and Scale Proof
+
+on:
+  push:
+    paths:
+      - 'agentweave/runtime.py'
+      - 'agentweave/runtime_types.py'
+      - 'agentweave/composition.py'
+      - 'agentweave/application.py'
+      - 'agentweave/integrations/mcp.py'
+      - 'evaluation/runtime_scale.py'
+      - 'tests/test_runtime_redteam_07.py'
+      - 'tests/test_mcp_real_e2e.py'
+      - '.github/workflows/runtime-proof.yml'
+  pull_request:
+    paths:
+      - 'agentweave/runtime.py'
+      - 'agentweave/runtime_types.py'
+      - 'agentweave/composition.py'
+      - 'agentweave/application.py'
+      - 'agentweave/integrations/mcp.py'
+      - 'evaluation/runtime_scale.py'
+      - 'tests/test_runtime_redteam_07.py'
+      - 'tests/test_mcp_real_e2e.py'
+      - '.github/workflows/runtime-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-redteam:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - run: pip install -e '.[dev,mcp]'
+      - name: Run runtime boundary red-team tests
+        run: pytest -q tests/test_runtime_redteam_07.py tests/test_mcp_real_e2e.py
+
+  routing-scale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - run: pip install -e '.[dev]'
+      - name: Run 100 to 100k tool routing scale study
+        run: python evaluation/runtime_scale.py --sizes 100,1000,10000,100000 --budgets 8 --output runtime-scale-results.json
+      - name: Upload scale evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: runtime-scale-evidence
+          path: runtime-scale-results.json
