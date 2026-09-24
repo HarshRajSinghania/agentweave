@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json, sqlite3
+from contextlib import contextmanager
 from .models import AgentProfile, Capability, TrustVector, ExecutionProfile
 
 class ReputationStore:
@@ -7,8 +8,16 @@ class ReputationStore:
         self.path=str(path)
         self._memory_conn=sqlite3.connect(':memory:') if self.path == ':memory:' else None
         self._init()
+    @contextmanager
     def _conn(self):
-        return self._memory_conn if self._memory_conn is not None else sqlite3.connect(self.path)
+        connection = self._memory_conn if self._memory_conn is not None else sqlite3.connect(self.path)
+        try:
+            # sqlite's context manager commits/rolls back, but does not close.
+            with connection:
+                yield connection
+        finally:
+            if self._memory_conn is None:
+                connection.close()
     def _init(self):
         with self._conn() as c:
             c.execute('create table if not exists agents (agent_id text primary key, payload text not null)')
