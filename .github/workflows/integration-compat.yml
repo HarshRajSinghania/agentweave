@@ -11,6 +11,8 @@ on:
       - 'pyproject.toml'
       - 'tests/test_upstream_integration_compat.py'
       - 'tests/test_mcp_real_e2e.py'
+      - 'examples/multi_mcp_collision.py'
+      - 'tests/test_multi_mcp_example.py'
       - '.github/workflows/integration-compat.yml'
   pull_request:
     paths:
@@ -22,6 +24,8 @@ on:
       - 'pyproject.toml'
       - 'tests/test_upstream_integration_compat.py'
       - 'tests/test_mcp_real_e2e.py'
+      - 'examples/multi_mcp_collision.py'
+      - 'tests/test_multi_mcp_example.py'
       - '.github/workflows/integration-compat.yml'
   workflow_dispatch:
 
@@ -58,4 +62,6 @@ jobs:
         run: pytest -q tests/test_upstream_integration_compat.py -k '${{ matrix.test }}'
       - name: Run real MCP end-to-end runtime proof
         if: matrix.name == 'mcp'
-        run: pytest -q tests/test_mcp_real_e2e.py
+        run: |
+          python -c "import mcp"
+          pytest -q tests/test_mcp_real_e2e.py tests/test_multi_mcp_example.py
