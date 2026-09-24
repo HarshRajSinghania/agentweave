@@ -89,6 +89,16 @@ app = AgentWeaveApplication.from_mcps(
 
 If both servers expose native `search`, the model sees collision-safe names such as `billing__search` and `crm__search`, while execution is dispatched by canonical tool identity and the MCP servers still receive the native tool name.
 
+Try the self-contained [multi-MCP collision example](examples/multi_mcp_collision.py):
+
+```bash
+python -m pip install -e '.[mcp]'
+python examples/multi_mcp_collision.py
+```
+
+It starts two in-process MCP servers and uses a scripted model to select both aliases, prints each alias and canonical identity, and verifies one native `search` call reached each provider. No credentials, external model or network service are required.
+
+
 For a provider-neutral local example without MCP, run [`examples/local_runtime.py`](examples/local_runtime.py):
 
 ```bash
