@@ -89,7 +89,19 @@ app = AgentWeaveApplication.from_mcps(
 
 If both servers expose native `search`, the model sees collision-safe names such as `billing__search` and `crm__search`, while execution is dispatched by canonical tool identity and the MCP servers still receive the native tool name.
 
-For a provider-neutral local preview without MCP, use `AgentWeaveRuntime`, `StaticToolCatalog`, and `CallableExecutor`; see [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md).
+For a provider-neutral local example without MCP, run [`examples/local_runtime.py`](examples/local_runtime.py):
+
+```bash
+python -m pip install -e '.[dev]'
+python examples/local_runtime.py
+```
+
+It routes an addition request from three local tools to `add_numbers`, prints the routed and
+model-visible tools, and executes the selected function through `CallableExecutor`, returning 42.
+The model adapter is deliberately scripted for this fixed request; no API keys, external services,
+network access, or optional integration packages are needed to run it after installation. Routing,
+schema validation, authorization, and execution use the real `AgentWeaveRuntime` pipeline.
+See [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md) for connecting a model provider.
 
 For repository development:
 

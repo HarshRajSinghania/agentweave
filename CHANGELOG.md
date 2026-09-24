@@ -4,6 +4,9 @@ All notable changes to AgentWeave are documented here. The project follows Seman
 
 ## [Unreleased]
 
+### Added
+- A provider-neutral local runtime example with three tools, routing visibility, and callable execution, requiring no model service or optional integration packages.
+
 ### Planned
 - Additional independently hosted A2A endpoints and physical edge-hardware evidence as environments become available.
 - Additional external provider/model reproductions using the credentialed Issue #38 live protocol.
