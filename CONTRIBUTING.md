@@ -4,11 +4,18 @@ Contributions are welcome across protocol interoperability, trust/identity, agen
 
 ## New contributor? Start here
 
-If this is your first AgentWeave contribution, these issues are intentionally bounded so you can learn the codebase without taking on a large subsystem:
+AgentWeave keeps a small set of intentionally bounded issues so contributors can learn the codebase without taking on a large subsystem. Pick the tier that best matches how deeply you want to work in the runtime.
 
-- [#57 — Add a multi-MCP collision example with duplicate native tool names](https://github.com/sauravsingla/agentweave/issues/57)
-- [#58 — Add a provider-neutral local runtime example with no external integrations](https://github.com/sauravsingla/agentweave/issues/58)
-- [#59 — Add an examples index with run commands and expected behavior](https://github.com/sauravsingla/agentweave/issues/59)
+### Good first issue
+
+- [#59 — Add an examples index with run commands and expected behavior](https://github.com/sauravsingla/agentweave/issues/59) — documentation-focused onboarding work covering the existing examples, dependencies, commands and network/credential requirements.
+
+### Intermediate issues
+
+- [#65 — Add configurable timeout handling for tool execution](https://github.com/sauravsingla/agentweave/issues/65) — follow the execution path and add bounded timeout behavior with focused tests.
+- [#66 — Add machine-readable reason codes for rejected tool calls](https://github.com/sauravsingla/agentweave/issues/66) — improve structured failure reporting across parsing, validation, authorization and execution boundaries.
+- [#67 — Add opt-in bounded parallel execution for independent tool calls](https://github.com/sauravsingla/agentweave/issues/67) — add async concurrency while preserving authorization, deterministic ordering and sequential defaults.
+- [#68 — Make runtime shutdown resilient when component cleanup fails](https://github.com/sauravsingla/agentweave/issues/68) — harden lifecycle cleanup, exception handling and reverse-order shutdown behavior.
 
 Comment on the issue if you want to coordinate before starting. For concrete design or usage questions that do not yet belong in an issue, use [GitHub Discussions](https://github.com/sauravsingla/agentweave/discussions) — useful topics include MCP/A2A interoperability, framework integrations, benchmark reproduction, routing behavior and tool-catalog design. Security reports should still follow `SECURITY.md`.
 
