@@ -1,14 +1,9 @@
 # AgentWeave — Route Before You Reason
 
 [![CI](https://github.com/sauravsingla/agentweave/actions/workflows/ci.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/ci.yml)
-[![Integration Compatibility](https://github.com/sauravsingla/agentweave/actions/workflows/integration-compat.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/integration-compat.yml)
-[![Runtime Security and Scale Proof](https://github.com/sauravsingla/agentweave/actions/workflows/runtime-proof.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/runtime-proof.yml)
-[![Package Installation Smoke](https://github.com/sauravsingla/agentweave/actions/workflows/package-smoke.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/package-smoke.yml)
-[![A2A SDK Interop](https://github.com/sauravsingla/agentweave/actions/workflows/sdk-interop.yml/badge.svg)](https://github.com/sauravsingla/agentweave/actions/workflows/sdk-interop.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Cite](https://img.shields.io/badge/cite-CITATION.cff-blue.svg)](CITATION.cff)
 [![PyPI](https://img.shields.io/pypi/v/agentweave-router.svg)](https://pypi.org/project/agentweave-router/)
 [![Python](https://img.shields.io/pypi/pyversions/agentweave-router.svg)](https://pypi.org/project/agentweave-router/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 **Pre-inference routing and secure execution for tool-rich LLM and multi-agent systems.**
 
@@ -21,7 +16,7 @@ AgentWeave reduces the tools or agents visible to a model before inference while
 **70.18% fewer tools exposed · 61.70% fewer input tokens · 50.95% lower mean local-model latency**  
 **MCP · A2A · LangGraph · AutoGen · policy-aware routing · recovery · reproducible evaluation**
 
-**Quick links:** [30-second start](#30-second-start) · [Canonical runtime](#canonical-runtime) · [Results](#results-at-a-glance) · [0.7 quickstart](docs/QUICKSTART_0_7.md) · [MCP](docs/MCP_INTEGRATION.md) · [Live Issue #38 protocol](docs/ISSUE38_LIVE_PROVIDER.md) · [Road to 1.0](docs/ROAD_TO_1_0.md) · [Paper](https://arxiv.org/abs/2608.23078)
+**Quick links:** [30-second start](#30-second-start) · [Canonical runtime](#canonical-runtime) · [Results](#results-at-a-glance) · [0.7 quickstart](docs/QUICKSTART_0_7.md) · [MCP](docs/MCP_INTEGRATION.md) · [Contribute](CONTRIBUTING.md) · [Discussions](https://github.com/sauravsingla/agentweave/discussions) · [Road to 1.0](docs/ROAD_TO_1_0.md) · [Paper](https://arxiv.org/abs/2608.23078)
 
 ```text
 catalog
@@ -94,7 +89,19 @@ app = AgentWeaveApplication.from_mcps(
 
 If both servers expose native `search`, the model sees collision-safe names such as `billing__search` and `crm__search`, while execution is dispatched by canonical tool identity and the MCP servers still receive the native tool name.
 
-For a provider-neutral local preview without MCP, use `AgentWeaveRuntime`, `StaticToolCatalog`, and `CallableExecutor`; see [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md).
+For a provider-neutral local example without MCP, run [`examples/local_runtime.py`](examples/local_runtime.py):
+
+```bash
+python -m pip install -e '.[dev]'
+python examples/local_runtime.py
+```
+
+It routes an addition request from three local tools to `add_numbers`, prints the routed and
+model-visible tools, and executes the selected function through `CallableExecutor`, returning 42.
+The model adapter is deliberately scripted for this fixed request; no API keys, external services,
+network access, or optional integration packages are needed to run it after installation. Routing,
+schema validation, authorization, and execution use the real `AgentWeaveRuntime` pipeline.
+See [`docs/QUICKSTART_0_7.md`](docs/QUICKSTART_0_7.md) for connecting a model provider.
 
 For repository development:
 
